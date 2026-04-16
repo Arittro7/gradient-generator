@@ -5,6 +5,18 @@ const App = () => {
   const [num , setNum] = useState(12)
   const [type, setType] = useState('linear')
 
+  // generate hex code for color
+  const getHexCode = () =>{
+    const rgb = 255 * 255 *255
+    const random = Math.random() * rgb
+    const int = Math.floor(random)
+    const hexColorCode = int.toString(16)
+    
+    // Insure 6 character hex code 👇
+    const hexCode = hexColorCode.padStart(6, "0")
+    return `#${hexCode}`
+  }
+
   return (
     <div className="min-h-screen bg-[#EFD2B0]">
       <div className="w-9/12 mx-auto">
@@ -28,6 +40,9 @@ const App = () => {
               <option value="linear">Linear</option>
               <option value="radial">Radial</option>
             </select>
+          </div>
+          <div>
+            <button onClick={getHexCode}>Test</button>
           </div>
         </div>
       </div>
