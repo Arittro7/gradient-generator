@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/purity */
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 
 const App = () => {
   const [num, setNum] = useState(12);
@@ -26,16 +27,32 @@ const App = () => {
       const color2 = getHexCode()
       const degree = Math.floor(Math.random() * 360)
       const degreeString = `${degree}deg`
-      colors.push({
-        gradient: `linear-gradient (${degreeString}, ${color1}, ${color2})`
+      if(type === "linear"){
+        colors.push({
+        gradient: `linear-gradient(${degreeString}, ${color1}, ${color2})`,
+        css: `background: 'linear-gradient(${degreeString}, ${color1}, ${color2})'`
       })
+      }else{
+        colors.push({
+        gradient: `radial-gradient(${color1}, ${color2})`,
+        css: `background: 'linear-gradient( ${color1}, ${color2})'`
+      })
+      }
+      
     }
     setGradient(colors)
   }
 
+  const cssCopy= (css) =>{
+    navigator.clipboard.writeText(css)
+    toast.success("Gradient Code Copied 😉" ,{
+      autoClose: 1000
+    })
+  }
+
   useEffect(()=>{
     gradientGenerate()
-  }, [num])
+  }, [num, type])
 
   return (
     <div className="min-h-screen bg-[#EFD2B0]">
@@ -61,6 +78,9 @@ const App = () => {
               <option value="linear">Linear</option>
               <option value="radial">Radial</option>
             </select>
+            <button 
+            onClick={()=>gradientGenerate()}
+            className="px-12 py-2 bg-black text-white rounded-2xl">Generate</button>
           </div>
         </div>
 
@@ -71,12 +91,15 @@ const App = () => {
             key={index}
               className="h-45 rounded-xl relative"
               style={{
-                background: getHexCode(),
+                background: item.gradient,
               }}
             >
-              <button className="absolute bg-black/50 hover:bg-black text-white p-2 rounded-xl right-2 bottom-3">
+              <button 
+              onClick={()=>cssCopy(item.css)}
+              className="absolute bg-black/50 hover:bg-black text-white p-2 rounded-xl right-2 bottom-3">
                 COPY
               </button>
+              <ToastContainer/>
             </div>
           ))}
         </div>
